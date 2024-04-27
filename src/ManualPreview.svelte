@@ -23,7 +23,7 @@
   }
 </script>
 
-<iframe src="/proxy/index.html" sandbox="allow-scripts" title="" class="preview-frame" bind:this={previewFrame}></iframe>
+<iframe src="/proxy/blank.html" sandbox="allow-scripts" title="" class="preview-frame" bind:this={previewFrame}></iframe>
 
 <style>
   .preview-frame {

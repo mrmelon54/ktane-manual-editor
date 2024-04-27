@@ -109,6 +109,7 @@
     height: 100%;
     display: flex;
     flex-direction: row;
+    flex-grow: 0;
 
     > .pane {
       width: 50%;
