@@ -6,16 +6,19 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strings"
+
+	"github.com/rs/cors"
 )
 
 func main() {
 	distFs := http.Dir("../dist")
 	distServer := http.FileServer(distFs)
 	proxy := httputil.NewSingleHostReverseProxy(&url.URL{Scheme: "https", Host: "ktane.timwi.de", Path: "/HTML/"})
+	allowAll := cors.AllowAll
 
 	srv := &http.Server{
 		Addr: ":8080",
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		Handler: allowAll().Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/proxy/blank.html" {
 				r.URL.Path = "/proxy/blank.html"
 				proxyFile, err := distFs.Open("proxy/blank.html")
@@ -37,7 +40,7 @@ func main() {
 			}
 
 			distServer.ServeHTTP(w, r)
-		}),
+		})),
 	}
 	srv.ListenAndServe()
 }

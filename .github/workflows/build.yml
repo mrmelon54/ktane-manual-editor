@@ -1,0 +1,25 @@
+name: Build/release
+
+on: push
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - run: yarn
+      - run: yarn build
+
+      - name: Archive
+        run: tar -czvf deploy.tar.gz -C ./dist .
+
+      - name: Release
+        run: 'curl --fail -X POST -H "Authorization: Bearer ${{ secrets.DEPLOY }}" -F "upload=@deploy.tar.gz" "https://sites.1f349.com/u?site=ktane-manual-editor.mrmelon54.com&branch=${{ github.ref_name }}"'

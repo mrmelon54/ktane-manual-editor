@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="/proxy/" class="manual-editor-proxy" />
+    <link rel="stylesheet" type="text/css" href="css/font.css" class="manual-editor-proxy" />
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" class="manual-editor-proxy" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" class="manual-editor-proxy" />
+    <script class="manual-editor-proxy">
+      window.onmessage = function (e) {
+        if (e.origin !== location.origin) return;
+        if (!e.data.startsWith("update-document::")) return;
+
+        const htmlString = JSON.parse(e.data.slice("update-document::".length)).text;
+        const parser = new DOMParser();
+        const page = parser.parseFromString(htmlString, "text/html");
+        document.head.replaceChildren(...document.head.querySelectorAll(".manual-editor-proxy"));
+        document.head.append(...page.head.children);
+        document.body.replaceChildren();
+        document.body.append(...page.body.children);
+      };
+    </script>
+  </head>
+  <body>
+    <div>There is no manual loaded</div>
+  </body>
+</html>

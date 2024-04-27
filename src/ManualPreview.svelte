@@ -12,7 +12,7 @@
   let safeCode = "";
   $: {
     safeCode = convertToSafeCode(source);
-    if (safeCode !== "") previewFrame.contentWindow?.postMessage("update-document::" + JSON.stringify({ text: safeCode }));
+    if (safeCode !== "") previewFrame.contentWindow?.postMessage("update-document::" + JSON.stringify({ text: safeCode }), "*");
   }
 
   function convertToSafeCode(code: string): string {
@@ -23,7 +23,7 @@
   }
 </script>
 
-<iframe src="/proxy/blank.html" sandbox="allow-scripts" title="" class="preview-frame" bind:this={previewFrame}></iframe>
+<iframe src="/proxy.html" sandbox="allow-scripts" title="" class="preview-frame" bind:this={previewFrame}></iframe>
 
 <style>
   .preview-frame {
