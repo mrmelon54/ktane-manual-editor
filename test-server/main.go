@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -19,18 +18,6 @@ func main() {
 	srv := &http.Server{
 		Addr: ":8080",
 		Handler: allowAll().Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.URL.Path == "/proxy/blank.html" {
-				r.URL.Path = "/proxy/blank.html"
-				proxyFile, err := distFs.Open("proxy/blank.html")
-				if err != nil {
-					http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-					return
-				}
-				defer proxyFile.Close()
-				w.Header().Set("Content-Type", "text/html")
-				io.Copy(w, proxyFile)
-				return
-			}
 			if strings.HasPrefix(r.URL.Path, "/proxy/") {
 				r2 := r.Clone(r.Context())
 				r2.URL.Path = strings.TrimPrefix(r.URL.Path, "/proxy")
