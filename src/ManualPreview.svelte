@@ -11,10 +11,13 @@
 
   $: {
     localStorage.setItem("ktane-dark-mode", "" + darkTheme);
-    if (previewFrame) previewFrame.contentWindow?.location.reload();
+    if (previewFrame) {
+      if (darkTheme) previewFrame.contentDocument?.body.classList.add("dark");
+      else previewFrame.contentDocument?.body.classList.remove("dark");
+    }
   }
 
-  function convertToSafeCode(code: string): string {
+  function convertToSafeCode(code: string): string | undefined {
     if (code === "") return undefined;
 
     const parser = new DOMParser();
