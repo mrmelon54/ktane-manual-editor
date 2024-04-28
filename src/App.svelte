@@ -3,9 +3,12 @@
   import ManualEditor from "./ManualEditor.svelte";
   import ManualPreview from "./ManualPreview.svelte";
 
-  import { FileDiff } from "lucide-svelte";
+  import FileDiff from "lucide-svelte/icons/file-diff";
+  import Moon from "lucide-svelte/icons/moon";
+  import Sun from "lucide-svelte/icons/sun";
 
   let showDiff: boolean = false;
+  let darkTheme: boolean = false;
   let manualName: string = "";
 
   let source: string = "";
@@ -20,7 +23,7 @@
       alert("Invalid manual name");
       return;
     }
-    fetch("/proxy/" + manualName + ".html")
+    fetch("/proxy/HTML/" + manualName + ".html")
       .then((x) => x.text())
       .then((x) => {
         source = x;
@@ -50,6 +53,15 @@
   </div>
   <div class="flex-gap" />
   <div class="right">
+    <button on:click={() => (darkTheme = !darkTheme)}>
+      {#if darkTheme}
+        <Moon />
+      {:else}
+        <Sun />
+      {/if}
+    </button>
+  </div>
+  <div class="right">
     <button on:click={() => (showDiff = !showDiff)} class:showDiff>
       <FileDiff />
     </button>
@@ -61,7 +73,7 @@
     <ManualEditor bind:source />
   </div>
   <div class="pane pane-preview">
-    <ManualPreview {source} />
+    <ManualPreview {source} {darkTheme} />
   </div>
   <div class="pane pane-diff" class:show={showDiff}>
     <ManualDiff {originalSource} {source} />

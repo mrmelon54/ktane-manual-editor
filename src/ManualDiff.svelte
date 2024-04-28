@@ -25,7 +25,7 @@
 </script>
 
 <div class="diff">
-  <CodeMirror value={diffValue} readonly={true} extensions={[StreamLanguage.define(diff)]} theme={oneDark} />
+  <CodeMirror value={diffValue} readonly={true} extensions={[StreamLanguage.define(diff)]} theme={oneDark} tabSize={4} />
 </div>
 
 <style lang="scss">

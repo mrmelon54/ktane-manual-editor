@@ -12,7 +12,7 @@ import (
 func main() {
 	distFs := http.Dir("../dist")
 	distServer := http.FileServer(distFs)
-	proxy := httputil.NewSingleHostReverseProxy(&url.URL{Scheme: "https", Host: "ktane.timwi.de", Path: "/HTML/"})
+	proxy := httputil.NewSingleHostReverseProxy(&url.URL{Scheme: "https", Host: "ktane.timwi.de", Path: "/"})
 	allowAll := cors.AllowAll
 
 	srv := &http.Server{

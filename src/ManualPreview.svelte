@@ -1,29 +1,43 @@
 <script lang="ts">
-  const safecoderegex = [
-    { source: /src\=\"((?!data\:)(?!https\:)[^"]+?)\"/gi, target: 'src="https://ktane.timwi.de/HTML/$1"' },
-    { source: /xlink\:href\=\"((?!data\:)[^"]+?)\"/gi, target: 'xlink:href="https://ktane.timwi.de/HTML/$1"' },
-    { source: /<link ([^ ]+?) href\=\"([^"])\">/gi, target: '<link $1 href="https://ktane.timwi.de/HTML/$2">' },
-  ];
+  const updateAttributeLinks = ["src", "xlink\\:href", "href"];
 
-  export let source = "";
+  export let source: string;
+  export let darkTheme: boolean;
 
   let previewFrame: HTMLIFrameElement;
 
-  let safeCode = "";
+  let safeCode = undefined;
+  $: safeCode = convertToSafeCode(source);
+
   $: {
-    safeCode = convertToSafeCode(source);
-    if (safeCode !== "") previewFrame.contentWindow?.postMessage("update-document::" + JSON.stringify({ text: safeCode }), "*");
+    localStorage.setItem("ktane-dark-mode", "" + darkTheme);
+    if (previewFrame) previewFrame.contentWindow?.location.reload();
   }
 
   function convertToSafeCode(code: string): string {
-    for (let i = 0; i < safecoderegex.length; i++) {
-      code = code.replace(safecoderegex[i].source, safecoderegex[i].target);
-    }
-    return code;
+    if (code === "") return undefined;
+
+    const parser = new DOMParser();
+    const page = parser.parseFromString(code, "text/html");
+
+    let baseEl = document.createElement("base");
+    baseEl.href = "/proxy/HTML/";
+    page.head.prepend(baseEl);
+    updateAttributeLinks.forEach((x) => updateURLs(page, x));
+
+    return page.documentElement.outerHTML;
+  }
+
+  function updateURLs(page: Document, attr: string) {
+    let nodes = page.querySelectorAll("[" + attr + "]");
+    nodes.forEach((x) => {
+      let a = x.getAttribute(attr);
+      if (a?.startsWith("https://ktane.timwi.de/")) x.setAttribute(attr, a.replace("https://ktane.timwi.de/", ""));
+    });
   }
 </script>
 
-<iframe src="/blank.html" sandbox="allow-scripts" title="" class="preview-frame" bind:this={previewFrame}></iframe>
+<iframe src="/blank.html" srcdoc={safeCode} sandbox="allow-scripts allow-same-origin" title="" class="preview-frame" bind:this={previewFrame}></iframe>
 
 <style>
   .preview-frame {

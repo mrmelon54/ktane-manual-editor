@@ -7,7 +7,7 @@
 </script>
 
 <div class="editor">
-  <CodeMirror bind:value={source} lang={html()} theme={oneDark} />
+  <CodeMirror bind:value={source} lang={html()} theme={oneDark} tabSize={4} placeholder={"Enter a manual name into the box above.\nThen click the button to load the manual."} />
 </div>
 
 <style lang="scss">
