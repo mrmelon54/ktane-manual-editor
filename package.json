@@ -28,7 +28,7 @@
     "@lezer/lr": "^1.4.0",
     "codemirror": "^6.0.1",
     "codemirror-lang-diff": "^1.0.0",
-    "diff": "^5.2.0",
+    "diff": "^5.2.2",
     "diff-match-patch": "^1.0.5",
     "line-diff": "^2.1.1",
     "lucide-svelte": "^0.373.0",
