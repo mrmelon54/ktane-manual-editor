@@ -7,12 +7,12 @@
   import Moon from "lucide-svelte/icons/moon";
   import Sun from "lucide-svelte/icons/sun";
 
-  let showDiff: boolean = false;
-  let darkTheme: boolean = false;
-  let manualName: string = "";
+  let showDiff: boolean = $state(false);
+  let darkTheme: boolean = $state(false);
+  let manualName: string = $state("");
 
-  let source: string = "";
-  let originalSource: string = "";
+  let source: string = $state("");
+  let originalSource: string = $state("");
 
   function loadManual() {
     let reg = /^(https\:\/\/ktane\.timwi\.de\/html\/)?([^\/]+)?(\.html)?$/i.exec(manualName);
@@ -47,13 +47,13 @@
   <div class="left">
     <div class="title">KTaNE Manual Editor</div>
     <div class="filename">
-      <label>Manual Name: <input bind:value={manualName} /><button on:click={() => loadManual()}>Load Manual</button></label>
-      <button on:click={() => downloadManual()}>Download Manual</button>
+      <label>Manual Name: <input bind:value={manualName} /><button onclick={() => loadManual()}>Load Manual</button></label>
+      <button onclick={() => downloadManual()}>Download Manual</button>
     </div>
   </div>
-  <div class="flex-gap" />
+  <div class="flex-gap"></div>
   <div class="right">
-    <button on:click={() => (darkTheme = !darkTheme)}>
+    <button onclick={() => (darkTheme = !darkTheme)}>
       {#if darkTheme}
         <Moon />
       {:else}
@@ -62,7 +62,7 @@
     </button>
   </div>
   <div class="right">
-    <button on:click={() => (showDiff = !showDiff)} class:showDiff>
+    <button onclick={() => (showDiff = !showDiff)} class:showDiff>
       <FileDiff />
     </button>
   </div>

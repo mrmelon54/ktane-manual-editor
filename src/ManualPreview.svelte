@@ -1,21 +1,19 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   const updateAttributeLinks = ["src", "xlink\\:href", "href"];
 
-  export let source: string;
-  export let darkTheme: boolean;
-
-  let previewFrame: HTMLIFrameElement;
-
-  let safeCode = undefined;
-  $: safeCode = convertToSafeCode(source);
-
-  $: {
-    localStorage.setItem("ktane-dark-mode", "" + darkTheme);
-    if (previewFrame) {
-      if (darkTheme) previewFrame.contentDocument?.body.classList.add("dark");
-      else previewFrame.contentDocument?.body.classList.remove("dark");
-    }
+  interface Props {
+    source: string;
+    darkTheme: boolean;
   }
+
+  let { source, darkTheme }: Props = $props();
+
+  let previewFrame: HTMLIFrameElement = $state();
+
+  let safeCode = $state(undefined);
+
 
   function convertToSafeCode(code: string): string | undefined {
     if (code === "") return undefined;
@@ -38,6 +36,16 @@
       if (a?.startsWith("https://ktane.timwi.de/")) x.setAttribute(attr, a.replace("https://ktane.timwi.de/", ""));
     });
   }
+  run(() => {
+    safeCode = convertToSafeCode(source);
+  });
+  run(() => {
+    localStorage.setItem("ktane-dark-mode", "" + darkTheme);
+    if (previewFrame) {
+      if (darkTheme) previewFrame.contentDocument?.body.classList.add("dark");
+      else previewFrame.contentDocument?.body.classList.remove("dark");
+    }
+  });
 </script>
 
 <iframe src="/blank.html" srcdoc={safeCode} sandbox="allow-scripts allow-same-origin" title="" class="preview-frame" bind:this={previewFrame}></iframe>

@@ -5,11 +5,14 @@
   import { oneDark } from "@codemirror/theme-one-dark";
   import { diffLines, type Change } from "diff";
 
-  export let source: string;
-  export let originalSource: string;
-  let diffValue: string;
+  interface Props {
+    source: string;
+    originalSource: string;
+  }
 
-  $: diffValue = getDiff(originalSource.replaceAll("\r\n", "\n"), source.replaceAll("\r\n", "\n"));
+  let { source, originalSource }: Props = $props();
+  let diffValue: string = $derived(getDiff(originalSource.replaceAll("\r\n", "\n"), source.replaceAll("\r\n", "\n")));
+
 
   function getDiff(text1: string, text2: string): string {
     let d = diffLines(text1, text2, { stripTrailingCr: true });

@@ -3,7 +3,11 @@
   import { html } from "@codemirror/lang-html";
   import { oneDark } from "@codemirror/theme-one-dark";
 
-  export let source = "editor";
+  interface Props {
+    source?: string;
+  }
+
+  let { source = $bindable("editor") }: Props = $props();
 </script>
 
 <div class="editor">
